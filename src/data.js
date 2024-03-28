@@ -1,6 +1,5 @@
 // * fake data's
 
-
 export const USERS = [
     {
         id: '1',

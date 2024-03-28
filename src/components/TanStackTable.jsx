@@ -1,166 +1,58 @@
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { USERS } from "../data";
-import { useState } from "react";
-import DownloadBtn from "./DownloadBtn";
-import DebouncedInput from "./DebouncedInput";
-import { SearchIcon } from "../Icons/Icons";
-
+import { useEffect, useState } from "react";
+import axios from "axios";
+import toast, { Toaster } from 'react-hot-toast';
 const TanStackTable = () => {
-  const columnHelper = createColumnHelper();
+  const [data, setData] = useState([]);
 
-  const columns = [
-    columnHelper.accessor("", {
-      id: "S.No",
-      cell: (info) => <span>{info.row.index + 1}</span>,
-      header: "№",
-    }),
-    columnHelper.accessor("profile", {
-      cell: (info) => (
-        <img
-          src={info?.getValue()}
-          alt="..."
-          className="rounded-full w-10 h-10 object-cover"
-        />
-      ),
-      header: "Нэр",
-    }),
-    columnHelper.accessor("firstName", {
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "Тоо ширхэг",
-    }),
-    columnHelper.accessor("lastName", {
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "Үнэ",
-    }),
+  useEffect(() => {
+    axios.get('/api/product')
+      .then((res) => setData(res.data.data))
+      .catch((err) => console.log(err));
+  }, []);
 
-  ];
-  const [data] = useState(() => [...USERS]);
-  const [globalFilter, setGlobalFilter] = useState("");
-
-  const table = useReactTable({
-    data,
-    columns,
-    state: {
-      globalFilter,
-    },
-    getFilteredRowModel: getFilteredRowModel(),
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-  });
+  const deleteItem = (id) => {
+    axios.delete(`/api/product/${id}`).then((res) => toast.success('Амжилттай устгагдлаа!')).catch(err => console.log(err));
+  }
 
   return (
-    <div className="  p-2 max-w-5xl mx-auto text-white fill-gray-400">
-      <div className="flex justify-between mb-2">
-        <div className="w-full flex items-center gap-1">
-          <SearchIcon />
-          <DebouncedInput
-            value={globalFilter ?? ""}
-            onChange={(value) => setGlobalFilter(String(value))}
-            className="p-2 bg-transparent outline-none border-b-2 w-1/5 focus:w-1/3 duration-300 border-indigo-500"
-            placeholder="Бараа хайх"
-          />
-        </div>
-        <DownloadBtn data={data} fileName={"peoples"} />
-      </div>
-      <table className="border border-gray-700 w-full text-left">
-        <thead className="bg-indigo-600">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id} className="capitalize px-3.5 py-2">
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                </th>
-              ))}
-            </tr>
-          ))}
+    <div className="relative overflow-x-auto">
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
+      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 my-24">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" className="px-6 py-3">
+              Нэр
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Тоо ширхэг
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Үнэ
+            </th>
+            <th>
+              Устгах
+            </th>
+          </tr>
         </thead>
         <tbody>
-          {table.getRowModel().rows.length ? (
-            table.getRowModel().rows.map((row, i) => (
-              <tr
-                key={row.id}
-                className={`
-                ${i % 2 === 0 ? "bg-gray-900" : "bg-gray-800"}
-                `}
+          {data.map((el) => (
+            <tr key={el._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <td
+                scope="row"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
               >
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="px-3.5 py-2">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))
-          ) : (
-            <tr className="text-center h-32">
-              <td colSpan={12}>No Recoard Found!</td>
+                {el.name}
+              </td>
+              <td className="px-6 py-4">{el.count}</td>
+              <td className="px-6 py-4">{el.price}</td>
+              <td>  <button onClick={() => deleteItem(el._id)} className=" p-1 bg-red-600 text-white  rounded-full w-8"> x</button> </td>
             </tr>
-          )}
+          ))}
         </tbody>
       </table>
-      {/* pagination */}
-      <div className="flex items-center justify-end mt-2 gap-2">
-        <button
-          onClick={() => {
-            table.previousPage();
-          }}
-          disabled={!table.getCanPreviousPage()}
-          className="p-1 border border-gray-300 px-2 disabled:opacity-30"
-        >
-          {"<"}
-        </button>
-        <button
-          onClick={() => {
-            table.nextPage();
-          }}
-          disabled={!table.getCanNextPage()}
-          className="p-1 border border-gray-300 px-2 disabled:opacity-30"
-        >
-          {">"}
-        </button>
-
-        <span className="flex items-center gap-1">
-          <div>Page</div>
-          <strong>
-            {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
-          </strong>
-        </span>
-        <span className="flex items-center gap-1">
-          | Go to page:
-          <input
-            type="number"
-            defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              table.setPageIndex(page);
-            }}
-            className="border p-1 rounded w-16 bg-transparent"
-          />
-        </span>
-        <select
-          value={table.getState().pagination.pageSize}
-          onChange={(e) => {
-            table.setPageSize(Number(e.target.value));
-          }}
-          className="p-2 bg-transparent"
-        >
-          {[10, 20, 30, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-      </div>
     </div>
   );
 };
