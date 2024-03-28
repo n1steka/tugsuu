@@ -78,27 +78,16 @@ export async function handleDeleteRequest(req, res) {
 
 export async function handlePutRequest(req, res) {
     try {
-        const { id } = req.query; // Assuming the ID is part of the request parameters
-        // Assuming you have a function like findByIdAndUpdate to update an existing record
-        const oldData = await Template.findById(id);
-        if (!oldData) {
-            // Handle the case where the record with the given ID was not found
-            return res.status(404).json({
-                success: false,
-                error: 'Record not found',
-            });
-        }
+        const { id } = req.query;
         const input = {
             ...req.body,
-            photo: req.file ? req.file.filename : oldData.photo,
         };
-        // Assuming you have a function like findByIdAndUpdate to update an existing record
         const data = await Template.findByIdAndUpdate(
             id,
             input,
-            { new: true } // This option returns the modified document instead of the original
+            { new: true }
         );
-        res.status(200).json({
+        res.status(201).json({
             success: true,
             msg: 'Post updated successfully',
             data,
