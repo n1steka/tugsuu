@@ -102,7 +102,7 @@ const Modal = ({ isOpen, onClose, item }) => {
       console.log(data)
       const response = await axios.put(`/api/product/${item._id}`, data);
       if (response) {
-        toast.success("Ажилттай");
+        toast.success("Амжилттай");
         console.log(response.data.data);
       }
     } catch (error) {
