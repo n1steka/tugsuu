@@ -2,7 +2,7 @@ import Template from "../models/order-model";
 
 export async function handleGetRequest(req, res) {
   try {
-    const data = await Template.find();
+    const data = await Template.find().populate("productId");
     res.status(200).json({ success: true, data });
   } catch (error) {
     console.error("Error in GET handler:", error.message);
@@ -33,10 +33,9 @@ export async function handleGetRequestDetail(req, res) {
 
 export async function handlePostRequest(req, res) {
   try {
-    const { product } = req.body;
+    console.log("----------------- rq ", req.body);
     const input = {
       ...req.body,
-      product: product,
     };
     const data = await Template.create(input);
 

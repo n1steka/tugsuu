@@ -99,7 +99,6 @@ const Modal = ({ isOpen, onClose, item }) => {
         ...formData,
         productId: item._id,
       };
-
       console.log(input);
       const response = await axios.post(`/api/order/`, input);
       if (response) {

@@ -23,7 +23,7 @@ const TanStackTable = () => {
       .delete(`/api/product/${id}`)
       .then((res) => {
         toast.success("Амжилттай устгагдлаа!");
-        setData((prevData) => prevData.filter((item) => item._id !== id)); // Remove the deleted item from the state
+        setData((prevData) => prevData.filter((item) => item._id !== id));
       })
       .catch((err) => console.log(err));
   };
@@ -63,7 +63,11 @@ const TanStackTable = () => {
               >
                 {el.name}
               </td>
-              <td className="px-6 py-4">{el.count}</td>
+              <td
+                className={`px-6 py-4 ${el.count < 10 ? "text-red-500" : ""}`}
+              >
+                {el.count}
+              </td>
               <td className="px-6 py-4">
                 <input type="number" defaultValue={el.price} />
               </td>

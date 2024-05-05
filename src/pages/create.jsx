@@ -17,8 +17,6 @@ export default function create() {
         <h1 className=" font-semibold -mb-16">Бараа бүтээгдэхүүн</h1>
         <div className="">
           <TanStackTable />
-        </div>
-        <div className=" ml-4">
           <OrderTable />
         </div>
       </div>
