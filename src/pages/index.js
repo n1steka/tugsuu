@@ -78,7 +78,7 @@ export default function Home() {
           href={"/user"}
         >
           {" "}
-          Хэрэглэгчээр нэвтрэх{" "}
+          Сарбараар нэвтрэх{" "}
         </Link>
       </form>
     </div>

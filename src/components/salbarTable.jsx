@@ -3,7 +3,7 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useForm } from "react-hook-form";
 
-const UserTable = () => {
+const SalbarTable = () => {
   const [data, setData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -139,7 +139,7 @@ const Modal = ({ isOpen, onClose, item }) => {
                 <ul>
                   <li>
                     {" "}
-                    <span className=" font-semibold"> Тоо ширхэг :</span>{" "}
+                    <span className=" font-semibold"> Тоо ширхэг :</span>
                     <input
                       type="text"
                       className="border-2 py-1 mb-2 ml-12"
@@ -168,4 +168,4 @@ const Modal = ({ isOpen, onClose, item }) => {
   );
 };
 
-export default UserTable;
+export default SalbarTable;

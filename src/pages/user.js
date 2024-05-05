@@ -25,7 +25,7 @@ export default function User() {
   return (
     <div className="mt-[300px] ">
       <Toaster position="top-center" reverseOrder={false} />
-      <h1 className=" w-full flex justify-center mb-8 text-xl"> Хэрэглэгч </h1>
+      <h1 className=" w-full flex justify-center mb-8 text-xl"> Сарбар </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="max-w-md mx-auto text-black"
