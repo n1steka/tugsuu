@@ -1,7 +1,7 @@
 import {
   handlePostRequest,
   handleGetRequest,
-} from "../../../../utils/controller/product-controller";
+} from "../../../../utils/controller/order-controller";
 import connectDB from "../../../../utils/db";
 
 connectDB();
