@@ -21,6 +21,9 @@ function OrderTable() {
 
     fetchData();
   }, []);
+  if (data.length === 0) {
+    return <div>Одоогоор захиалгын хүсэлт байхгүй байна</div>;
+  }
 
   const updateOrder = async (orderCount, productId, orderId) => {
     try {
