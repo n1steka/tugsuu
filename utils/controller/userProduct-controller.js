@@ -1,8 +1,8 @@
-import Template from "../models/userProduct";
+import UserProduct from "../models/userProduct-model";
 
 export async function handleGetRequest(req, res) {
   try {
-    const data = await Template.find().populate("productId");
+    const data = await UserProduct.find().populate("productId");
     res.status(200).json({ success: true, data });
   } catch (error) {
     console.error("Error in GET handler:", error.message);
@@ -14,7 +14,7 @@ export async function handleGetDetailRequest(req, res) {
   try {
     const { id } = req.query;
     console.log(id);
-    const data = await Template.findById(id);
+    const data = await UserProduct.findById(id);
     res.status(200).json({ success: true, data });
   } catch (error) {
     console.error("Error in GET handler:", error.message);
@@ -23,7 +23,7 @@ export async function handleGetDetailRequest(req, res) {
 }
 export async function handleGetRequestDetail(req, res) {
   try {
-    const data = await Template.findById(req.params.id);
+    const data = await UserProduct.findById(req.params.id);
     res.status(200).json({ success: true, data });
   } catch (error) {
     console.error("Error in GET handler:", error.message);
@@ -33,11 +33,11 @@ export async function handleGetRequestDetail(req, res) {
 
 export async function handlePostRequest(req, res) {
   try {
-    console.log("----------------- rq ", req.body);
+    const { orderCount, productId } = req.body;
     const input = {
       ...req.body,
     };
-    const data = await Template.create(input);
+    const data = await UserProduct.create({ orderCount, productId });
 
     res.status(201).json({
       success: true,
@@ -56,7 +56,7 @@ export async function handlePostRequest(req, res) {
 export async function handleDeleteRequest(req, res) {
   try {
     const { id } = req.query;
-    const data = await Template.findByIdAndDelete(id, {
+    const data = await UserProduct.findByIdAndDelete(id, {
       new: true,
     });
     return res.status(200).json({
@@ -79,7 +79,7 @@ export async function handlePutRequest(req, res) {
     const input = {
       ...req.body,
     };
-    const data = await Template.findByIdAndUpdate(id, input, { new: true });
+    const data = await UserProduct.findByIdAndUpdate(id, input, { new: true });
     res.status(201).json({
       success: true,
       msg: "Post updated successfully",
