@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast"; // For displaying notifications
+import toast from "react-hot-toast";
 
 function OrderTable() {
   const [data, setData] = useState([]);
@@ -22,7 +22,11 @@ function OrderTable() {
     fetchData();
   }, []);
   if (data.length === 0) {
-    return <div>Одоогоор захиалгын хүсэлт байхгүй байна</div>;
+    return (
+      <div className="border p-2 border-yellow-700 font-semibold">
+        Одоогоор захиалгын хүсэлт байхгүй байна !
+      </div>
+    );
   }
 
   const updateOrder = async (orderCount, productId, orderId) => {
@@ -52,7 +56,7 @@ function OrderTable() {
   };
 
   const handleClick = (orderCount, productId, orderId) => {
-    updateOrder(orderCount, productId, orderId); // Confirm and delete the order
+    updateOrder(orderCount, productId, orderId);
   };
 
   if (isLoading) {

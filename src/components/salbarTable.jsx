@@ -9,7 +9,7 @@ const SalbarTable = () => {
 
   const loadData = () => {
     axios
-      .get("/api/product")
+      .get("/api/userProduct")
       .then((res) => setData(res.data.data))
       .catch((err) => console.log(err));
   };
@@ -20,7 +20,7 @@ const SalbarTable = () => {
 
   const deleteItem = (id) => {
     axios
-      .delete(`/api/product/${id}`)
+      .delete(`/api/userProduct/${id}`)
       .then((res) => {
         toast.success("Амжилттай устгагдлаа!");
         setData((prevData) => prevData.filter((item) => item._id !== id)); // Remove the deleted item from the state
@@ -60,22 +60,29 @@ const SalbarTable = () => {
                 scope="row"
                 className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
               >
-                {el.name}
+                {el.productId.name}
               </td>
-              <td className="px-6 py-4">{el.count}</td>
+              <td className="px-6 py-4">{el.orderCount}</td>
               <td className="px-6 py-4">
-                <input type="number" defaultValue={el.price} />
+                <input type="number" defaultValue={el.productId.price} />
               </td>
-              <td className="px-6 py-4">{el?.cratedAt.slice(0, 10)}</td>
+              <td className="px-6 py-4">{el?.createdAt?.slice(0, 10)}</td>
               <td>
                 <button
                   onClick={() => setIsOpen(true)}
                   className="p-1 bg-sky-500 text-white rounded-full w-[150px]"
                 >
-                  Захиалга хийх
+                  Засах
                 </button>
               </td>
-
+              <td>
+                <button
+                  onClick={() => deleteItem(el._id)}
+                  className="p-1 bg-sky-500 text-white rounded-full w-[30px]"
+                >
+                  X
+                </button>
+              </td>
               <Modal isOpen={isOpen} onClose={closeModal} item={el} />
             </tr>
           ))}
@@ -95,12 +102,10 @@ const Modal = ({ isOpen, onClose, item }) => {
 
   const onSubmit = async (formData) => {
     try {
-      const input = {
-        ...formData,
-        productId: item._id,
-      };
-      console.log(input);
-      const response = await axios.post(`/api/order/`, input);
+      const response = await axios.put(
+        `/api/userProduct/${item._id}`,
+        formData
+      );
       if (response) {
         toast.success("Амжилттай");
         console.log(response.data.data);
