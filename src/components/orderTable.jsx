@@ -40,6 +40,7 @@ function OrderTable() {
 
       // Update the product with the new count
       await axios.put(`/api/product/${productId}`, { count: newProductCount });
+      await axios.post(`/api/userProduct/`, { orderCount, productId });
 
       // Delete the order since it's completed
       await axios.delete(`/api/order/${orderId}`);
