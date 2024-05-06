@@ -21,47 +21,51 @@ function OrderTable() {
 
     fetchData();
   }, []);
-  if (data.length === 0) {
-    return (
-      <div className="border p-2 border-yellow-700 font-semibold">
-        Одоогоор захиалгын хүсэлт байхгүй байна !
-      </div>
-    );
-  }
 
+  const deleteItem = async (id) => {
+    try {
+      await axios.delete(`/api/order/${id}`);
+      setData((prevData) => prevData.filter((item) => item._id !== id));
+    } catch (err) {
+      console.error("Error deleting product:", err);
+      toast.error("Failed to delete product.");
+    }
+  };
   const updateOrder = async (orderCount, productId, orderId) => {
     try {
-      // Fetch the product to get its current count
-      const mainProductResponse = await axios.get(`/api/product/${productId}`);
-      const currentProductCount = mainProductResponse.data.data.count;
+      const productResponse = await axios.get(`/api/product/${productId}`);
+      const currentProductCount = productResponse.data.data.count;
 
-      // Calculate the new count for the product
       const newProductCount = currentProductCount - orderCount;
 
-      // Update the product with the new count
       await axios.put(`/api/product/${productId}`, { count: newProductCount });
+      console.log("order _d", orderId);
+      deleteItem(orderId);
       await axios.post(`/api/userProduct/`, { orderCount, productId });
 
-      // Delete the order since it's completed
-      await axios.delete(`/api/order/${orderId}`);
-
-      // Update the local data to reflect the order deletion
       setData((prevData) => prevData.filter((order) => order._id !== orderId));
 
       toast.success("Order successfully confirmed!");
-      window.location.reload(false);
     } catch (error) {
-      console.error("Error updating order:", error);
+      console.error("Error confirming order:", error);
       toast.error("Failed to confirm order.");
     }
   };
 
-  const handleClick = (orderCount, productId, orderId) => {
+  const handleConfirmClick = (orderCount, productId, orderId) => {
     updateOrder(orderCount, productId, orderId);
   };
 
   if (isLoading) {
     return <p>Loading...</p>;
+  }
+
+  if (data.length === 0) {
+    return (
+      <div className="border p-2 border-yellow-700 font-semibold">
+        Одоогоор захиалгын хүсэлт байхгүй байна!
+      </div>
+    );
   }
 
   return (
@@ -88,21 +92,21 @@ function OrderTable() {
             <tbody>
               {data.map((order) => (
                 <tr
-                  key={order._id}
+                  key={order?._id}
                   className="text-sm leading-none text-gray-600 h-16"
                 >
-                  <td className="pl-4">{order._id}</td>
+                  <td className="pl-4">{order?._id}</td>
                   <td className="pl-4">{order?.productId?.name}</td>
-                  <td className="pl-4">{order.orderCount}</td>
+                  <td className="pl-4">{order?.orderCount}</td>
                   <td className="pl-4">
-                    {new Date(order.createdAt).toDateString()}
+                    {new Date(order?.createdAt).toDateString()}
                   </td>
                   <td className="pl-4">
                     <button
                       onClick={() =>
-                        handleClick(
-                          order.orderCount,
-                          order.productId?._id,
+                        handleConfirmClick(
+                          order?.orderCount,
+                          order?.productId._id,
                           order?._id
                         )
                       }

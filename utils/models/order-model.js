@@ -1,19 +1,22 @@
 import mongoose from "mongoose";
 
-const orderSchema = new mongoose.Schema({
-  productId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Product",
-    required: true,
+const orderSchema = new mongoose.Schema(
+  {
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      required: [true, "Product ID is required"],
+    },
+    orderCount: {
+      type: Number,
+      required: [true, "Order count is required"],
+      min: [1, "Order count must be at least 1"],
+    },
   },
-  orderCount: {
-    type: String,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 const Order = mongoose.models.Order || mongoose.model("Order", orderSchema);
 
