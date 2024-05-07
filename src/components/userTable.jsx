@@ -96,6 +96,9 @@ const Modal = ({ isOpen, onClose, product }) => {
 
   const onSubmit = async (formData) => {
     try {
+      if (formData.orderCount > product.count) {
+        return alert("Барааны үлдэгдэл хүрэлцхгүй байна");
+      }
       const input = {
         ...formData,
         productId: product._id,

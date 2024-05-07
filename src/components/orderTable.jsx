@@ -35,7 +35,9 @@ function OrderTable() {
     try {
       const productResponse = await axios.get(`/api/product/${productId}`);
       const currentProductCount = productResponse.data.data.count;
-
+      if (productResponse.data.data.count < orderCount) {
+        return alert("Барааны үлдэгдэл хүрэлцэхгүй байна");
+      }
       const newProductCount = currentProductCount - orderCount;
 
       await axios.put(`/api/product/${productId}`, { count: newProductCount });
